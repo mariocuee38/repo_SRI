@@ -23,13 +23,16 @@
 1. La red que voy a usar es la `192.168.5.0/24`.  
 Tengo un router PfSense con IP 192.168.5.1.  
 Quiero poner el servidor DHCP en la 192.168.5.5.
+
 ![Esquema Red](img/deb0.PNG)
 
 2. Para poder empezar lo primero que tengo que hacer es comprobar en VirtualBox que esten en la misma red Interna que el resto de maquinas que seran clientes.
+
 ![Red Vbox](img/deb1.PNG)
 
 
 3. Es muy importante tambien poner una IP estática al Debian que usaré para DHCP.
+
 ![IP fija](img/deb2.PNG)
 
 <br><br>
@@ -42,8 +45,11 @@ sudo apt update
 sudo apt upgrade
 ```
 * Update:
+
 ![Update](img/deb3.PNG)
+
 * Upgrade:
+
 ![Upgrade](img/deb4.PNG)
 
 <br><br>
@@ -57,6 +63,7 @@ sudo apt install isc-dhcp-server
 ```
 
 ![Install DHCP](img/deb5.PNG)
+
  >Puede que de un error al final de la instalación, porque intentará iniciar el servicio pero al no tenerlo configurado, puede dar fallo. No quiere decir que no se haya instalado bien.
 
 <br><br>
@@ -68,6 +75,7 @@ Antes de empezar a configurar el rango de direcciones y demas, voy a indicar la 
 sudo nano /etc/default/isc-dchp-server
 ```
 ![interfaz](img/deb6.PNG)
+
 Escojo la interfaz que tiene mi red local (enp0s3). 
 
 <br><br>
@@ -87,12 +95,16 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 ```
 Así me ha quedado configurado:
+
 ![dhcpd.conf](img/deb7.PNG)
+
 Repartirá IPs de la `192.168.5.200 a la 192.168.5.254`.  
 Le he puesto el DNS del instituto y la IP del router como gateaway.
 
 >En mi caso no hay colisión de direcciones porque el rango que he puesto no interfiere con nada.  
-Si así fuese, en el mismo `dhcpd.conf` hay una opcion para excluir IPs: ![exclusión](img/deb8.PNG)
+Si así fuese, en el mismo `dhcpd.conf` hay una opcion para excluir IPs:
+
+![exclusión](img/deb8.PNG)
 
 <br><br>
 
@@ -103,6 +115,7 @@ Para habilitar el servidor DHCP ejecuté el siguiente comando:
 ```
 sudo systemctl enable isc-dhcp-server
 ```
+
 >`systemctl` es un comando que sirve para iniciar, detener o activar servicios
 
 ![enable](img/deb9.PNG)
@@ -123,8 +136,11 @@ sudo systemctl start isc-dhcp-server
 journalctl -u isc-dhcp-server
 ```
 ![enable](img/deb12.PNG)
+
 Una vez solucionado esto:
+
 ![enable](img/deb10.PNG)
+
 <br><br>
 
 ## **Paso 6: Verificar el estado del servidor DHCP**
@@ -134,7 +150,9 @@ Verifico el estado del servidor DHCP para asegurarte de que esté funcionando co
 ```
 sudo systemctl status isc-dhcp-server
 ```
+
 ![enable](img/deb11.PNG)
+
 Ya sale que está activo el servicio.
 
 <br><br>
@@ -143,13 +161,15 @@ Ya sale que está activo el servicio.
 ---
 Para comprobar si la configuración ha sido efectiva, voy a encender una equipo en esa red, configurado para obtener una configuración de **red automática**...
 
-![enable](img/deb13.PNG)  
+![enable](img/deb13.PNG) 
+
 Reinicio...
 
 ![enable](img/deb14.PNG)
 
 
 Ahora probare con otro equipo...
+
 ![enable](img/deb15.PNG)
 
 ### Se puede ver que todo cuadra bien.
